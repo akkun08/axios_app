@@ -1,19 +1,32 @@
 <template>
-  <h1>{{ msg }}</h1>
-  <button @click="count++">count is: {{ count }}</button>
-  <p>Edit <code>components/HelloWorld.vue</code> to test hot module replacement.</p>
+  <section class="alert alert-primary">
+    <h1>{{ data.title }}</h1>
+    <p>{{ data.message }}</p>
+    <textarea v-model="data.mydata" rows="5" class="form-control"></textarea>
+  </section>
 </template>
 
 <script>
+import axios from "axios";
+import { reactive, onMounted } from "vue";
+
+const url = "/data.txt";
+
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  setup(props) {
+    const data = reactive({
+      title: "Axios",
+      message: "This  is axios sample.",
+      mydata: "",
+    });
+    const getData = async () => {
+      let result = await axios.get(url);
+      data.mydata = result.data;
+    };
+    onMounted(() => {
+      getData();
+    });
+    return { data, getData };
   },
-  data() {
-    return {
-      count: 0
-    }
-  }
-}
+};
 </script>
